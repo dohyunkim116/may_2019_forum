@@ -67,6 +67,20 @@ res2 <- foreach(col=iter(mat, by = "column"), m=iter(medians), .combine = rbind)
 }
 all(res2[,2] >= 800)
 
+# nested foreach
+system.time(foreach(a=(1:1000),.combine=cbind) %:%
+    foreach(b=(1:100), .combine = c) %do% {
+        rnorm(1,mean = a, sd = sqrt(b))
+    })
+
+registerDoParallel(cores = 7)
+system.time(foreach(a=(1:1000),.combine=cbind) %:%
+                foreach(b=(1:100), .combine = c) %dopar% {
+                    rnorm(1,mean = a, sd = sqrt(b))
+                })
+                    
+
+
 
 
 
